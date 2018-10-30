@@ -1,8 +1,13 @@
 import os
 import csv
+
+# string for the split function
 import string
+
+#datetime for formating date
 from datetime import datetime
 
+# US state dictionary to translate US States to Two letter codes
 us_state_abbrev = {
     'Alabama': 'AL',
     'Alaska': 'AK',
@@ -64,11 +69,19 @@ new_disctionary={}
 with open (csvpath, "r", newline="") as csvfile:
     csvreader=csv.DictReader(csvfile)
     for row in csvreader:
+        
+# Formating date and calling new variable for date DOB2 
        (row["DOB"]) = datetime.strptime((row["DOB"]), '%Y-%m-%d')
        DOB2 = (row["DOB"]).strftime('%m/%d/%Y')
+       
+# Formating SSN to hide the first five numbers
        x=(row["SSN"])
        SSN2= ("***-**"+str(x[6:]))
+
+#Using state dictionary to translate US States to Two letter codes
        State2=us_state_abbrev[(row["State"])]
+       
+# Creating a dictionary for new variables inside the loop
        employee_dictionary = {
                    "Emp ID": row["Emp ID"],
                    "First Name": row["Name"].split(" ")[0].strip(),
@@ -78,7 +91,7 @@ with open (csvpath, "r", newline="") as csvfile:
                    "State": str(State2),
                    }        
        
-
+# Writing dictionary to csv file
        with open("employee_data2.csv", 'w') as csvfile:
            fieldnames = ["Emp ID", "First Name", "Last Name", "DOB", "SSN", "State"]
            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
