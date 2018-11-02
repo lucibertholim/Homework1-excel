@@ -13,7 +13,7 @@ with open (csvpath, "r", newline="") as csvfile:
     change_list=[]
     date_list=[]
     start_value=867884
-    #greatest_difference = ["", 0]
+    
     
     for line in csvreader:
         
