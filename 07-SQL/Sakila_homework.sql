@@ -32,31 +32,86 @@ FROM sakila.country
 WHERE country IN ('Afghanistan', 'Bangladesh', 'China');
 
 # 3a. You want to keep a description of each actor. You don't think you will be performing queries on a description, so create a column in the table `actor` named `description` and use the data type `BLOB` (Make sure to research the type `BLOB`, as the difference between it and `VARCHAR` are significant).
-UPDATE
+ALTER TABLE sakila.actor
+ADD COLUMN `description` BLOB;
+
+SELECT * from sakila.actor;
 
 # 3b. Very quickly you realize that entering descriptions for each actor is too much effort. Delete the `description` column.
 
+ALTER TABLE sakila.actor
+DROP COLUMN `description`;
+
+SELECT * from sakila.actor;
+
 # 4a. List the last names of actors, as well as how many actors have that last name.
+SELECT last_name, COUNT(first_name) 
+from sakila.actor
+GROUP BY last_name;
 
 # 4b. List last names of actors and the number of actors who have that last name, but only for names that are shared by at least two actors.
+SELECT last_name, COUNT(first_name) As `Count`
+from sakila.actor
+GROUP BY last_name
+HAVING `Count` >1;
 
 # 4c. The actor `HARPO WILLIAMS` was accidentally entered in the `actor` table as `GROUCHO WILLIAMS`. Write a query to fix the record.
+SELECT * FROM sakila.actor
+WHERE first_name='GROUCHO';
+
+UPDATE sakila.actor
+SET first_name = 'HARPO'
+WHERE first_name = 'GROUCHO' AND last_name='WILLIAMS';
+
+SELECT * FROM sakila.actor
+WHERE first_name='GROUCHO';
 
 # 4d. Perhaps we were too hasty in changing `GROUCHO` to `HARPO`. It turns out that `GROUCHO` was the correct name after all! In a single query, if the first name of the actor is currently `HARPO`, change it to `GROUCHO`.
+UPDATE sakila.actor
+SET first_name = 'GROUCHO'
+WHERE first_name = 'HARPO' AND last_name='WILLIAMS';
+
+SELECT * FROM sakila.actor
+WHERE first_name='GROUCHO';
 
 # 5a. You cannot locate the schema of the `address` table. Which query would you use to re-create it?
+SHOW CREATE TABLE sakila.address;
 
 # 6a. Use `JOIN` to display the first and last names, as well as the address, of each staff member. Use the tables `staff` and `address`:
+SELECT staff.first_name, staff.last_name, address.address
+FROM sakila.staff
+LEFT JOIN sakila.address
+ON address.address_id=staff.address_id;
 
 # 6b. Use `JOIN` to display the total amount rung up by each staff member in August of 2005. Use tables `staff` and `payment`.
+SELECT staff.first_name, staff.last_name, SUM(payment.amount)
+FROM sakila.payment
+LEFT JOIN sakila.staff
+ON staff.staff_id=payment.staff_id
+GROUP BY first_name, last_name;
 
 # 6c. List each film and the number of actors who are listed for that film. Use tables `film_actor` and `film`. Use inner join.
+SELECT film.title, COUNT(film_actor.actor_id) AS `Total`
+FROM sakila.film 
+INNER JOIN sakila.film_actor
+ON film_actor.film_id=film.film_id
+GROUP BY film.title;
 
 # 6d. How many copies of the film `Hunchback Impossible` exist in the inventory system?
+SELECT film.title, COUNT(inventory.film_id) AS total 
+FROM sakila.inventory
+LEFT JOIN sakila.film
+ON film.film_id=inventory.film_id
+GROUP BY film.title
+HAVING film.title='Hunchback Impossible';
 
 # 6e. Using the tables `payment` and `customer` and the `JOIN` command, list the total paid by each customer. List the customers alphabetically by last name:
-
-  ![Total amount paid](Images/total_payment.png)
+SELECT customer.first_name, customer.last_name, SUM(payment.amount) AS `Total Amount Paid`
+FROM sakila.payment
+LEFT JOIN sakila.customer
+ON payment.customer_id=customer.customer_id
+GROUP BY customer.first_name, customer.last_name
+ORDER BY customer.last_name;
 
 # 7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters `K` and `Q` have also soared in popularity. Use subqueries to display the titles of movies starting with the letters `K` and `Q` whose language is English.
 
