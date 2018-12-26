@@ -114,10 +114,54 @@ GROUP BY customer.first_name, customer.last_name
 ORDER BY customer.last_name;
 
 # 7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters `K` and `Q` have also soared in popularity. Use subqueries to display the titles of movies starting with the letters `K` and `Q` whose language is English.
+SELECT film.title 
+FROM sakila.film
+WHERE film.language_id 
+IN
+(
+	SELECT language.language_id 
+	FROM sakila.language
+	WHERE language.name='English'
+    )
+    AND  (film.title LIKE 'K%')
+    OR (film.title LIKE'Q%')
 
-# 7b. Use subqueries to display all actors who appear in the film `Alone Trip`.
+# 7b. Use subqueries to display all actors who appear in the film `Alone Trip`.rating
+
+SELECT actor.first_name
+,actor.last_name
+FROM sakila.actor
+WHERE actor_id
+IN
+(SELECT film_actor.actor_id
+FROM sakila.film_actor
+WHERE film_id
+IN
+	(SELECT film.film_id
+	FROM sakila.film
+	WHERE title='Alone Trip'
+    )
+    )
 
 # 7c. You want to run an email marketing campaign in Canada, for which you will need the names and email addresses of all Canadian customers. Use joins to retrieve this information.
+SELECT customer.first_name
+,customer.last_name
+,customer.email
+FROM sakila.customer
+WHERE customer.address_id
+IN
+(SELECT address.address_id
+FROM sakila.address
+WHERE address.city_id
+IN
+(SELECT city.city_id
+FROM sakila.city
+WHERE city.country_id
+IN
+(SELECT country.country_id
+FROM sakila.country
+WHERE country='Canada'
+)))
 
 # 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as _family_ films.
 
