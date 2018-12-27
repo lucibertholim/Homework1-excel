@@ -150,31 +150,104 @@ SELECT customer.first_name
 FROM sakila.customer
 WHERE customer.address_id
 IN
-(SELECT address.address_id
-FROM sakila.address
-WHERE address.city_id
-IN
-(SELECT city.city_id
-FROM sakila.city
-WHERE city.country_id
-IN
-(SELECT country.country_id
-FROM sakila.country
-WHERE country='Canada'
-)))
+	(SELECT address.address_id
+	FROM sakila.address
+	WHERE address.city_id
+	IN
+		(SELECT city.city_id
+		FROM sakila.city
+		WHERE city.country_id
+		IN
+			(SELECT country.country_id
+			FROM sakila.country
+			WHERE country='Canada'
+			)))
 
 # 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as _family_ films.
+SELECT film.title
+FROM sakila.film
+WHERE film.film_id
+IN
+    (SELECT film_category.film_id
+	FROM sakila.film_category
+	WHERE film_category.category_id
+	IN
+		(SELECT category.category_id
+		FROM sakila.category
+		WHERE category.name='family'
+		))
 
 # 7e. Display the most frequently rented movies in descending order.
+SELECT COUNT(rental.rental_id) AS `Total Rent`
+,film.title 
+FROM sakila.rental
+LEFT JOIN sakila.inventory
+ON inventory.inventory_id=rental.inventory_id
+LEFT JOIN sakila.film
+ON inventory.film_id=film.film_id
+GROUP BY film.title
+ORDER BY `Total Rent` DESC
 
 # 7f. Write a query to display how much business, in dollars, each store brought in.
+SELECT SUM(payment.amount) AS `Total Payment`
+, store.store_id
+FROM sakila.payment
+LEFT JOIN sakila.staff
+ON payment.staff_id=staff.staff_id
+LEFT JOIN sakila.store
+ON staff.store_id=store.store_id
+GROUP BY store.store_id
 
 # 7g. Write a query to display for each store its store ID, city, and country.
+SELECT store.store_id
+,city.city
+,country.country
+FROM sakila.store
+LEFT JOIN sakila.address
+ON store.address_id=address.address_id
+LEFT JOIN sakila.city
+ON address.city_id=city.city_id
+LEFT JOIN sakila.country
+ON city.country_id=country.country_id
 
 # 7h. List the top five genres in gross revenue in descending order. (##Hint##: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
+SELECT SUM(payment.amount) `Total Revenue`
+,category.name
+FROM sakila.payment
+LEFT JOIN sakila.rental
+ON payment.rental_id=rental.rental_id
+LEFT JOIN sakila.inventory
+ON rental.inventory_id=inventory.inventory_id
+LEFT JOIN sakila.film_category
+ON inventory.film_id=film_category.film_id
+LEFT JOIN sakila.category
+ON film_category.category_id=category.category_id
+GROUP BY category.name
+ORDER BY `Total Revenue` DESC
+LIMIT 5
+
 
 # 8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
+CREATE VIEW sakila.top_5_genres AS
+
+SELECT SUM(payment.amount) `Total Revenue`
+,category.name
+FROM sakila.payment
+LEFT JOIN sakila.rental
+ON payment.rental_id=rental.rental_id
+LEFT JOIN sakila.inventory
+ON rental.inventory_id=inventory.inventory_id
+LEFT JOIN sakila.film_category
+ON inventory.film_id=film_category.film_id
+LEFT JOIN sakila.category
+ON film_category.category_id=category.category_id
+GROUP BY category.name
+ORDER BY `Total Revenue` DESC
+LIMIT 5
+
 
 # 8b. How would you display the view that you created in 8a?
+SELECT * FROM sakila.top_5_genres
 
 # 8c. You find that you no longer need the view `top_five_genres`. Write a query to delete it.
+DROP VIEW sakila.top_5_genres
