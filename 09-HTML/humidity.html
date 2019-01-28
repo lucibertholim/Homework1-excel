@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Responsive Columns</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<!-- Navegation -->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-latitude" href="index.html">Latitude</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav">
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Plots <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+          <li><a href="temperature.html">Temperature</a></li>
+          <li><a href="humidity.html">Humidity</a></li>
+          <li><a href="wind.html">Wind</a></li>
+          <li><a href="cloudiness.html">Cloudiness</a></li>
+        </ul>
+      </li>
+      <li><a href="comparison.html">Comparison</a></li>
+      <li><a href="data.html">Data</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Content-->
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12 col-md-8">
+        <div class="box">
+          <div class="header text-center header1-style">
+            <h1>Humidity</h1>
+            <hr class="light">
+          </div>
+          <div class="content">
+            <img src="humidity.png" class="visualization-img" alt="Temp vs Latitude">
+            <p class="text-justify text-style">
+            There is no relationship between latitude and humidity. However, humidity tends to be higher in northern hemispheres. </p>
+            </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4">
+          <div class="box">
+            <div class="header text-center header1-style">
+              <h1>Visualizations</h1>
+              <hr class="light">
+            </div>
+            <div class="content-fluid">
+              <div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <a href="temperature.html"><img src="temperature.png" class="img-fluid" alt="Temperature Figure" height="100"></a>
+                  </div>
+                  <div class="col-sm-6">
+                    <a href="humidity.html"><img src="humidity.png" class="img-fluid" alt="Humidity Figure" height="100"></a>
+                  </div>
+                </div>                             
+                <div class="row">
+                  <div class="col-sm-6">
+                    <a href="cloudiness.html"><img src="cloudiness.png" class="img-fluid"  alt="Cloudiness Figure" height="100"></a>
+                  </div>
+                  <div class="col-sm-6">
+                    <a href="wind.html"><img src="wind.png" class="img-fluid"  alt="Wind Figure" height="100"></a>
+                  </div>
+                </div>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
