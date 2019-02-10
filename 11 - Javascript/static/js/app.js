@@ -1,4 +1,4 @@
- // Select the submit button
+ /// Select the submit button
  var submit = d3.select("#filter-btn");
 
  window.addEventListener('load', () => {displayTable(data)});
